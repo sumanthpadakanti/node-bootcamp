@@ -1,5 +1,7 @@
 const fs = require("fs");
 const http = require("http");
+
+const data = fs.readFileSync("./dev-data/data.json", "utf-8");
 fs.readFile("./txt/input.txt", "utf-8", (err, data) => {
   console.log(data);
 });
@@ -15,6 +17,11 @@ const server = http.createServer((req, res) => {
     res.end(`Overview details`);
   } else if (pathName == "/product") {
     res.end(`Product details`);
+  } else if (pathName == "/api") {
+    res.writeHead(200, {
+      "content-type": "application/json",
+    });
+    res.end(`${data}`);
   } else {
     res.writeHead(404, {
       "content-type": "application/json",
