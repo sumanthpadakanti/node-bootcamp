@@ -10,7 +10,18 @@ fs.writeFile("./txt/writeFile.txt", text, "utf-8", (err) => {
 });
 
 const server = http.createServer((req, res) => {
-  res.end(`Hello from server`);
+  const pathName = req.url;
+  if (pathName == "/" || pathName == "/overview") {
+    res.end(`Overview details`);
+  } else if (pathName == "/product") {
+    res.end(`Product details`);
+  } else {
+    res.writeHead(404, {
+      "content-type": "application/json",
+      "cache-control": "no-cache",
+    });
+    res.end(`Page not found`);
+  }
 });
 
 server.listen("4000", "127.0.0.1", () => {
