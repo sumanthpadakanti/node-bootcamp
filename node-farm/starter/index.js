@@ -10,7 +10,6 @@ const text = `some text added to writeFile`;
 fs.writeFile("./txt/writeFile.txt", text, "utf-8", (err) => {
   console.log(err);
 });
-
 const server = http.createServer((req, res) => {
   const pathName = req.url;
   if (pathName == "/" || pathName == "/overview") {
