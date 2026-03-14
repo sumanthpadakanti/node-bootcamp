@@ -466,5 +466,12 @@
         "day": 5
       }
     ]
+  },
+  {
+    "id": 10,
+    "name": "The Sea Cruise",
+    "duration": 7,
+    "maxGroupSize": 15,
+    "difficulty": "medium"
   }
 ]
