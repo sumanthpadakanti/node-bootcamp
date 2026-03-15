@@ -17,6 +17,18 @@ app.get('/api/v1/tours', (req, res) => {
     .status(200)
     .json({ status: 'success', result: tours.length, data: { tours } });
 });
+app.get('/api/v1/tours/:id', (req, res) => {
+  const paramsId = Number(req.params.id);
+  if (paramsId > tours.length) {
+    return res
+      .status(404)
+      .json({ status: 'fail', data: { message: 'no tour found' } });
+  }
+  const getTour = tours.find((tour) => {
+    return tour.id === paramsId;
+  });
+  res.status(200).json({ status: 'success', data: { tour: getTour } });
+});
 app.post('/api/v1/tours', (req, res) => {
   const tourId = tours.length + 1;
   console.log(req.body);
