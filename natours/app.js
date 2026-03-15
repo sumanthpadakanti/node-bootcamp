@@ -61,6 +61,27 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   );
   res.status(200).json({ status: 'sucess', data: { message: 'updated tour' } });
 });
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const paramsId = Number(req.params.id);
+  const deleteTour = tours.find((tour) => {
+    return tour.id === paramsId;
+  });
+  if (!deleteTour) {
+    return res
+      .status(404)
+      .json({ status: 'fail', data: { message: 'no tour found to delete' } });
+  }
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours.json`,
+    JSON.stringify(updateTours),
+    (err) => {
+      res
+        .status(500)
+        .json({ status: 'fail', data: { message: 'failed to delete tour' } });
+    }
+  );
+  res.status(200).json({ status: 'sucess', data: { message: 'deleted tour' } });
+});
 app.listen(3000, () => {
   console.log('Server is listening on 3000');
 });
