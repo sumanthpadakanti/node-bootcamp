@@ -15,12 +15,12 @@ app.use(express.json());
 // app.post('/', (req, res) => {
 //   res.status(404).send(`you can't use post on this url`);
 // });
-
-app.get('/api/v1/tours', getAllTours);
-app.post('/api/v1/tours', createTour);
-app.get('/api/v1/tours/:id', getTour);
-app.patch('/api/v1/tours/:id', updateTour);
-app.delete('/api/v1/tours/:id', deleteTour);
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 app.listen(3000, () => {
   console.log('Server is listening on 3000');
 });
