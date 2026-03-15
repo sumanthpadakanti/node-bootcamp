@@ -19,11 +19,6 @@ app.get('/api/v1/tours', (req, res) => {
 });
 app.get('/api/v1/tours/:id', (req, res) => {
   const paramsId = Number(req.params.id);
-  if (paramsId > tours.length) {
-    return res
-      .status(404)
-      .json({ status: 'fail', data: { message: 'no tour found' } });
-  }
   const getTour = tours.find((tour) => {
     return tour.id === paramsId;
   });
@@ -43,6 +38,28 @@ app.post('/api/v1/tours', (req, res) => {
         .json({ status: 'sucess', data: { message: 'saved successfully ' } });
     }
   );
+});
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const paramsId = Number(req.params.id);
+  const getTour = tours.find((tour) => {
+    return tour.id === paramsId;
+  });
+  if (!getTour) {
+    return res
+      .status(404)
+      .json({ status: 'fail', data: { message: 'no tour found' } });
+  }
+  Object.assign(getTour, req.body);
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours.json`,
+    JSON.stringify(tours),
+    (err) => {
+      res
+        .status(500)
+        .json({ status: 'fail', data: { message: 'failed to update tour' } });
+    }
+  );
+  res.status(200).json({ status: 'sucess', data: { message: 'updated tour' } });
 });
 app.listen(3000, () => {
   console.log('Server is listening on 3000');
