@@ -3,9 +3,12 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours.json`, 'utf-8')
 );
 const getAllTours = (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', result: tours.length, data: { tours } });
+  res.status(200).json({
+    status: 'success',
+    requestedAt: req.requestedAt,
+    result: tours.length,
+    data: { tours },
+  });
 };
 const createTour = (req, res) => {
   const tourId = tours.length + 1;

@@ -9,6 +9,10 @@ const {
 
 const app = express();
 app.use(express.json());
+app.use((req, res, next) => {
+  req.requestedAt = new Date().toISOString();
+  next();
+});
 // app.get('/', (req, res) => {
 //   res.status(200).json({ message: 'Hello from server side', name: 'natours' });
 // });
