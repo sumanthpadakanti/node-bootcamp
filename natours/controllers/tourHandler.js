@@ -1,7 +1,15 @@
 const fs = require('fs');
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours.json`, 'utf-8')
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf-8')
 );
+const checkId = (req, res, next, val) => {
+  if (req.params.id > tours.length) {
+    return res
+      .status(404)
+      .json({ status: 'fail', data: { message: 'Invalid ID' } });
+  }
+  next();
+};
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -16,7 +24,7 @@ const createTour = (req, res) => {
   const toursObj = Object.assign({ id: tourId }, req.body);
   tours.push(toursObj);
   fs.writeFile(
-    `${__dirname}/../dev-data/data/tours.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     () => {
       res
@@ -30,6 +38,7 @@ const getTour = (req, res) => {
   const getTour = tours.find((tour) => {
     return tour.id === paramsId;
   });
+
   res.status(200).json({ status: 'success', data: { tour: getTour } });
 };
 const updateTour = (req, res) => {
@@ -37,14 +46,9 @@ const updateTour = (req, res) => {
   const getTour = tours.find((tour) => {
     return tour.id === paramsId;
   });
-  if (!getTour) {
-    return res
-      .status(404)
-      .json({ status: 'fail', data: { message: 'no tour found' } });
-  }
   Object.assign(getTour, req.body);
   fs.writeFile(
-    `${__dirname}/../dev-data/data/tours.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     (err) => {
       if (err) {
@@ -58,17 +62,13 @@ const updateTour = (req, res) => {
 };
 const deleteTour = (req, res) => {
   const paramsId = Number(req.params.id);
-  const updateTour = tours.filter((tour) => {
-    return tour.id !== paramsId;
+  const deleteTour = tours.findIndex((tour) => {
+    return tour.id == paramsId;
   });
-  if (!updateTour) {
-    return res
-      .status(404)
-      .json({ status: 'fail', data: { message: 'no tour found to delete' } });
-  }
+  tours.splice(deleteTour, 1);
   fs.writeFile(
-    `${__dirname}/../dev-data/data/tours.json`,
-    JSON.stringify(updateTour),
+    `${__dirname}/../dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
     (err) => {
       if (err) {
         return res
@@ -80,6 +80,7 @@ const deleteTour = (req, res) => {
   res.status(200).json({ status: 'sucess', data: { message: 'deleted tour' } });
 };
 module.exports = {
+  checkId,
   getAllTours,
   createTour,
   getTour,
